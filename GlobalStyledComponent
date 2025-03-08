@@ -1,0 +1,36 @@
+import { styled } from "@mui/material/styles";
+
+// Define props to accept **any** CSS property dynamically
+interface StyledProps {
+  as?: keyof JSX.IntrinsicElements; // Allows passing any HTML tag (div, button, input, etc.)
+  isDisabled?: boolean;
+  isInvalid?: boolean;
+  [key: string]: any; // Accepts **any** dynamic CSS property
+}
+
+// Base styled-component using MUI's `styled`
+export const StyledComponent = styled("div", {
+  shouldForwardProp: (prop) => !["isDisabled", "isInvalid"].includes(prop as string), 
+})<StyledProps>(({ isDisabled, isInvalid, ...styles }) => ({
+  ...styles, // Directly apply all dynamic styles
+  border: isInvalid ? "1px solid red" : "1px solid #ccc",
+  backgroundColor: isDisabled ? "#f0f0f0" : "white",
+  color: isDisabled ? "#a0a0a0" : "black",
+  pointerEvents: isDisabled ? "none" : "auto",
+  "&:focus": {
+    borderColor: isInvalid ? "red" : "#007bff",
+  },
+}));
+
+// Create specialized variations for inputs and buttons
+export const StyledInput = styled(StyledComponent).attrs({ as: "input" })``;
+
+export const StyledButton = styled(StyledComponent).attrs({ as: "button" })(({ isDisabled, ...styles }) => ({
+  ...styles, // Apply all dynamic styles
+  backgroundColor: isDisabled ? "grey" : "#007bff",
+  cursor: isDisabled ? "not-allowed" : "pointer",
+  opacity: isDisabled ? 0.6 : 1,
+  "&:hover": {
+    backgroundColor: isDisabled ? "grey" : "#0056b3",
+  },
+}));
