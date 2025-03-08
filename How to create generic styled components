@@ -1,0 +1,50 @@
+import styled from "styled-components";
+import { ComponentType } from "react";
+
+// Generic props for styled components
+interface StyledComponentProps {
+  as?: ComponentType<any>; // Allows passing any UI component dynamically
+  isDisabled?: boolean;
+  isInvalid?: boolean;
+  [key: string]: any; // Allows passing other HTML properties dynamically
+}
+
+export const StyledComponent = styled.div<StyledComponentProps>`
+  width: 100%;
+  padding: ${(props) => props.padding || "10px"};
+  border: ${(props) => (props.isInvalid ? "1px solid red" : "1px solid #ccc")};
+  background-color: ${(props) => (props.isDisabled ? "#f0f0f0" : "white")};
+  color: ${(props) => (props.isDisabled ? "#a0a0a0" : "black")};
+  pointer-events: ${(props) => (props.isDisabled ? "none" : "auto")};
+  
+  &:focus {
+    border-color: ${(props) => (props.isInvalid ? "red" : "#007bff")};
+  }
+`;
+
+// Usage Example
+export const StyledInput = styled(StyledComponent).attrs({ as: "input" })``;
+export const StyledButton = styled(StyledComponent).attrs({ as: "button" })`
+  background-color: ${(props) => (props.isDisabled ? "grey" : "#007bff")};
+  cursor: ${(props) => (props.isDisabled ? "not-allowed" : "pointer")};
+  opacity: ${(props) => (props.isDisabled ? 0.6 : 1)};
+  &:hover {
+    background-color: ${(props) => (props.isDisabled ? "grey" : "#0056b3")};
+  }
+`;
+
+<StyledInput
+  type="text"
+  placeholder={field.placeholder}
+  value={reduxValues[field.reduxKey!] || ""}
+  onChange={(e) => handleChange(e, field)}
+  isDisabled={fieldProperties[field.id]?.isDisabled}
+  isInvalid={fieldProperties[field.id]?.isRequired && !reduxValues[field.reduxKey!]} 
+/>
+
+<StyledButton
+  onClick={(e) => handleChange(e, field)}
+  isDisabled={fieldProperties[field.id]?.isDisabled}
+>
+  {field.label}
+</StyledButton>
